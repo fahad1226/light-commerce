@@ -4,6 +4,23 @@ import FeaturedSection from "@/components/landing/featured-section";
 import HeroSection from "@/components/landing/hero-section";
 import MoreFocus from "@/components/landing/more-focus";
 import AppFooter from "@/components/layouts/footer";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Light Commerce - Premium Lighting Solutions",
+    description:
+        "Discover our premium collection of energy-efficient lighting solutions. From LED bulbs to smart lighting, we have everything to brighten your world.",
+    keywords: ["Light Commerce", "Home", "Lights"],
+    icons: {
+        icon: "/favicon.ico",
+    },
+    openGraph: {
+        title: "Light Commerce - Premium Lighting Solutions",
+        description:
+            "Discover our premium collection of energy-efficient lighting solutions. From LED bulbs to smart lighting, we have everything to brighten your world.",
+        images: "/favicon.ico",
+    },
+};
 
 export default function Home() {
     return (

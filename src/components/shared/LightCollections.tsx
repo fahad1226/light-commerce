@@ -1,114 +1,23 @@
+import { LightProduct } from "@/types/global";
 import clsx from "clsx";
 import { StarIcon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
-const products = [
-    {
-        id: 2,
-        name: "Organize Pen Holder",
-        price: "$15",
-        rating: 5,
-        reviewCount: 18,
-        imageSrc:
-            "https://tailwindcss.com/plus-assets/img/ecommerce-images/category-page-05-image-card-02.jpg",
-        imageAlt: "TODO",
-        href: "#",
-    },
-    {
-        id: 3,
-        name: "Organize Sticky Note Holder",
-        price: "$15",
-        rating: 5,
-        reviewCount: 14,
-        imageSrc:
-            "https://tailwindcss.com/plus-assets/img/ecommerce-images/category-page-05-image-card-03.jpg",
-        imageAlt: "TODO",
-        href: "#",
-    },
-    {
-        id: 4,
-        name: "Organize Phone Holder",
-        price: "$15",
-        rating: 4,
-        reviewCount: 21,
-        imageSrc:
-            "https://tailwindcss.com/plus-assets/img/ecommerce-images/category-page-05-image-card-04.jpg",
-        imageAlt: "TODO",
-        href: "#",
-    },
-    {
-        id: 5,
-        name: "Organize Small Tray",
-        price: "$15",
-        rating: 4,
-        reviewCount: 22,
-        imageSrc:
-            "https://tailwindcss.com/plus-assets/img/ecommerce-images/category-page-05-image-card-05.jpg",
-        imageAlt: "TODO",
-        href: "#",
-    },
-    {
-        id: 6,
-        name: "Organize Basic Set (Maple)",
-        price: "$149",
-        rating: 5,
-        reviewCount: 64,
-        imageSrc:
-            "https://tailwindcss.com/plus-assets/img/ecommerce-images/category-page-05-image-card-06.jpg",
-        imageAlt: "TODO",
-        href: "#",
-    },
-    {
-        id: 7,
-        name: "Out and About Bottle",
-        price: "$25",
-        rating: 4,
-        reviewCount: 12,
-        imageSrc:
-            "https://tailwindcss.com/plus-assets/img/ecommerce-images/category-page-05-image-card-07.jpg",
-        imageAlt: "TODO",
-        href: "#",
-    },
-    {
-        id: 8,
-        name: "Daily Notebook Refill Pack",
-        price: "$14",
-        rating: 4,
-        reviewCount: 41,
-        imageSrc:
-            "https://tailwindcss.com/plus-assets/img/ecommerce-images/category-page-05-image-card-08.jpg",
-        imageAlt: "TODO",
-        href: "#",
-    },
-    {
-        id: 9,
-        name: "Leather Key Ring (Black)",
-        price: "$32",
-        rating: 5,
-        reviewCount: 24,
-        imageSrc:
-            "https://tailwindcss.com/plus-assets/img/ecommerce-images/category-page-05-image-card-09.jpg",
-        imageAlt: "TODO",
-        href: "#",
-    },
-];
-
-export default function CollectionSection() {
+export default function LightCollections({
+    products,
+}: {
+    products: LightProduct[];
+}) {
     return (
         <div className="bg-white">
             <div className="mx-auto container px-4 overflow-hidden sm:px-6 lg:px-8 py-12 xl:py-24">
-                <h2 className="text-2xl font-bold text-gray-900">
-                    Shop by Collection
-                </h2>
-                <p className="mt-4 text-base text-gray-500">
-                    Each season, we collaborate with world-class designers to
-                    create a collection inspired by the natural world.
-                </p>
                 <div className="-mx-px grid grid-cols-2 border-l border-gray-200 sm:mx-0 md:grid-cols-3 lg:grid-cols-4">
                     {products.map((product) => (
-                        <div
+                        <Link
                             key={product.id}
                             className="group relative border-r border-b border-gray-200 p-4 sm:p-6"
+                            href={product.href}
                         >
                             <Image
                                 alt={product.imageAlt}
@@ -146,14 +55,14 @@ export default function CollectionSection() {
                                         ))}
                                     </div>
                                     <p className="mt-4 text-base font-medium text-gray-900">
-                                    {product.price}
-                                </p>
+                                        {product.price}
+                                    </p>
                                 </div>
                                 <button className="mt-4 w-full rounded-md bg-gray-900 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-gray-700 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-gray-900">
                                     Add to Cart
                                 </button>
                             </div>
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>

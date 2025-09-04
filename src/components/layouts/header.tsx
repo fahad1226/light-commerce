@@ -1,13 +1,7 @@
 "use client";
 
-import { useAppStore } from "@/lib/store";
-
-import {
-    Popover,
-    PopoverButton,
-    PopoverGroup,
-    PopoverPanel,
-} from "@headlessui/react";
+import { useAppDispatch, useAppSelector } from "@/lib/store";
+import { toggleShoppingCart } from "@/lib/store/slices/uiSlice";
 import {
     BarChart3,
     ChevronDownIcon,
@@ -15,104 +9,43 @@ import {
     ShieldQuestion,
     ShoppingBagIcon,
 } from "lucide-react";
-import { useState } from "react";
+import Link from "next/link";
+import ShoppingCartDrawer from "../shared/ShoppingCart";
+
 const currencies = ["CAD", "USD", "AUD", "EUR", "GBP"];
 
 const navigation = {
-    categories: [
-        {
-            name: "Women",
-            featured: [
-                {
-                    name: "New Arrivals",
-                    href: "#",
-                    imageSrc:
-                        "https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-category-01.jpg",
-                    imageAlt:
-                        "Models sitting back to back, wearing Basic Tee in black and bone.",
-                },
-                {
-                    name: "Basic Tees",
-                    href: "#",
-                    imageSrc:
-                        "https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-category-02.jpg",
-                    imageAlt:
-                        "Close up of Basic Tee fall bundle with off-white, ochre, olive, and black tees.",
-                },
-                {
-                    name: "Accessories",
-                    href: "#",
-                    imageSrc:
-                        "https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-category-03.jpg",
-                    imageAlt:
-                        "Model wearing minimalist watch with black wristband and white watch face.",
-                },
-                {
-                    name: "Carry",
-                    href: "#",
-                    imageSrc:
-                        "https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-category-04.jpg",
-                    imageAlt:
-                        "Model opening tan leather long wallet with credit card pockets and cash pouch.",
-                },
-            ],
-        },
-        {
-            name: "Men",
-            featured: [
-                {
-                    name: "New Arrivals",
-                    href: "#",
-                    imageSrc:
-                        "https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-01-men-category-01.jpg",
-                    imageAlt:
-                        "Hats and sweaters on wood shelves next to various colors of t-shirts on hangers.",
-                },
-                {
-                    name: "Basic Tees",
-                    href: "#",
-                    imageSrc:
-                        "https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-01-men-category-02.jpg",
-                    imageAlt: "Model wearing light heather gray t-shirt.",
-                },
-                {
-                    name: "Accessories",
-                    href: "#",
-                    imageSrc:
-                        "https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-01-men-category-03.jpg",
-                    imageAlt:
-                        "Grey 6-panel baseball hat with black brim, black mountain graphic on front, and light heather gray body.",
-                },
-                {
-                    name: "Carry",
-                    href: "#",
-                    imageSrc:
-                        "https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-01-men-category-04.jpg",
-                    imageAlt:
-                        "Model putting folded cash into slim card holder olive leather wallet with hand stitching.",
-                },
-            ],
-        },
-    ],
     pages: [
-        { name: "Company", href: "#" },
-        { name: "Stores", href: "#" },
+        { name: "Accent Lighting", href: "/accent-lighting" },
+        { name: "Ambient Lighting", href: "/ambient-lighting" },
+        { name: "Decorative Lighting", href: "/decorative-lighting" },
+        { name: "Task Lighting", href: "/task-lighting" },
     ],
 };
+
 export default function AppHeader() {
-    const { getCartItemCount } = useAppStore();
-    const cartItemCount = getCartItemCount();
-    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const dispatch = useAppDispatch();
+
+    // Select states from all three slices
+    const {
+        showShoppingCart,
+        isLoading: uiLoading,
+        error: uiError,
+    } = useAppSelector((state) => state.ui);
+
+    const handleToggleCart = () => dispatch(toggleShoppingCart());
 
     return (
         <>
+            <ShoppingCartDrawer
+                open={showShoppingCart}
+                handleClose={handleToggleCart}
+            />
             <header className="relative z-10">
                 <nav aria-label="Top">
-                    {/* Top navigation */}
-                    <div className="bg-gray-900">
-                        <div className="mx-auto flex h-10 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
-                            {/* Currency selector */}
-                            <form>
+                    <div className="bg-zinc-300">
+                        <div className="mx-auto flex h-8 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+                            <form className="hidden lg:block lg:flex-1">
                                 <div className="-ml-2 inline-grid grid-cols-1">
                                     <select
                                         id="desktop-currency"
@@ -133,18 +66,26 @@ export default function AppHeader() {
                                 </div>
                             </form>
 
-                            <div className="flex items-center space-x-6">
+                            <p className="flex-1 text-center text-sm font-medium text-gray-600 lg:flex-none">
+                                Get free delivery on orders over $100
+                            </p>
+
+                            <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
                                 <a
                                     href="#"
-                                    className="text-sm font-medium text-white hover:text-gray-100"
-                                >
-                                    Sign in
-                                </a>
-                                <a
-                                    href="#"
-                                    className="text-sm font-medium text-white hover:text-gray-100"
+                                    className="text-sm font-medium text-gray-600 hover:text-gray-800"
                                 >
                                     Create an account
+                                </a>
+                                <span
+                                    aria-hidden="true"
+                                    className="h-6 w-px bg-gray-600"
+                                />
+                                <a
+                                    href="#"
+                                    className="text-sm font-medium text-gray-600 hover:text-gray-800"
+                                >
+                                    Sign in
                                 </a>
                             </div>
                         </div>
@@ -152,213 +93,124 @@ export default function AppHeader() {
 
                     {/* Secondary navigation */}
                     <div className="bg-white/10 backdrop-blur-md backdrop-filter">
-                        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                            <div>
-                                <div className="flex h-16 items-center justify-between">
-                                    {/* Logo (lg+) */}
-                                    <div className="hidden lg:flex lg:flex-1 lg:items-center">
-                                        <a href="#">
-                                            <span className="sr-only">
-                                                Your Company
-                                            </span>
-                                            <img
-                                                alt=""
-                                                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=white"
-                                                className="h-8 w-auto"
-                                            />
-                                        </a>
+                        <div className="mx-auto container px-4 sm:px-6 lg:px-8">
+                            <div className="flex h-16 items-center justify-between">
+                                {/* Logo (lg+) */}
+                                <Link href="/" className="flex items-center">
+                                    <div className="w-8 h-8 bg-gradient-to-r from-orange-400 to-pink-400 rounded-full flex items-center justify-center">
+                                        <div className="w-4 h-4 bg-white rounded-full"></div>
                                     </div>
+                                    <span className="ml-2 text-xl font-bold text-gray-200">
+                                        LightUp
+                                    </span>
+                                </Link>
 
-                                    <div className="hidden h-full lg:flex">
-                                        {/* Flyout menus */}
-                                        <PopoverGroup className="inset-x-0 bottom-0 px-4">
-                                            <div className="flex h-full justify-center space-x-8">
-                                                {navigation.categories.map(
-                                                    (category) => (
-                                                        <Popover
-                                                            key={category.name}
-                                                            className="flex"
-                                                        >
-                                                            <div className="relative flex">
-                                                                <PopoverButton className="group relative flex items-center justify-center text-sm font-medium text-white transition-colors duration-200 ease-out">
-                                                                    {
-                                                                        category.name
-                                                                    }
-                                                                    <span
-                                                                        aria-hidden="true"
-                                                                        className="absolute inset-x-0 -bottom-px z-30 h-0.5 transition duration-200 ease-out group-data-open:bg-white"
-                                                                    />
-                                                                </PopoverButton>
-                                                            </div>
-                                                            <PopoverPanel
-                                                                transition
-                                                                className="absolute inset-x-0 top-full z-20 w-full bg-white text-sm text-gray-500 transition data-closed:opacity-0 data-enter:duration-200 data-enter:ease-out data-leave:duration-150 data-leave:ease-in"
-                                                            >
-                                                                {/* Presentational element used to render the bottom shadow, if we put the shadow on the actual panel it pokes out the top, so we use this shorter element to hide the top of the shadow */}
-                                                                <div
-                                                                    aria-hidden="true"
-                                                                    className="absolute inset-0 top-1/2 bg-white shadow-sm"
-                                                                />
-                                                                <div className="relative bg-white">
-                                                                    <div className="mx-auto max-w-7xl px-8">
-                                                                        <div className="grid grid-cols-4 gap-x-8 gap-y-10 py-16">
-                                                                            {category.featured.map(
-                                                                                (
-                                                                                    item
-                                                                                ) => (
-                                                                                    <div
-                                                                                        key={
-                                                                                            item.name
-                                                                                        }
-                                                                                        className="group relative"
-                                                                                    >
-                                                                                        <img
-                                                                                            alt={
-                                                                                                item.imageAlt
-                                                                                            }
-                                                                                            src={
-                                                                                                item.imageSrc
-                                                                                            }
-                                                                                            className="aspect-square w-full rounded-md bg-gray-100 object-cover group-hover:opacity-75"
-                                                                                        />
-                                                                                        <a
-                                                                                            href={
-                                                                                                item.href
-                                                                                            }
-                                                                                            className="mt-4 block font-medium text-gray-900"
-                                                                                        >
-                                                                                            <span
-                                                                                                aria-hidden="true"
-                                                                                                className="absolute inset-0 z-10"
-                                                                                            />
-                                                                                            {
-                                                                                                item.name
-                                                                                            }
-                                                                                        </a>
-                                                                                        <p
-                                                                                            aria-hidden="true"
-                                                                                            className="mt-1"
-                                                                                        >
-                                                                                            Shop
-                                                                                            now
-                                                                                        </p>
-                                                                                    </div>
-                                                                                )
-                                                                            )}
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </PopoverPanel>
-                                                        </Popover>
-                                                    )
-                                                )}
-                                                {navigation.pages.map(
-                                                    (page) => (
-                                                        <a
-                                                            key={page.name}
+                                <div className="hidden h-full lg:flex items-center justify-center w-full">
+                                    {/* Flyout menus */}
+                                    <div className="inset-x-0 bottom-0 px-4">
+                                        <div className="flex h-full justify-center space-x-8">
+                                            {navigation.pages.map((page) => (
+                                                <div
+                                                    key={page.name}
+                                                    className="flex"
+                                                >
+                                                    <div className="relative flex">
+                                                        <Link
                                                             href={page.href}
-                                                            className="flex items-center text-sm font-medium text-white"
+                                                            className="group relative flex items-center justify-center text-sm tracking-wide font-bold uppercase text-white"
                                                         >
                                                             {page.name}
-                                                        </a>
-                                                    )
-                                                )}
-                                            </div>
-                                        </PopoverGroup>
+                                                        </Link>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
+                                </div>
 
-                                    {/* Mobile menu and search (lg-) */}
-                                    <div className="flex flex-1 items-center lg:hidden">
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                setMobileMenuOpen(true)
-                                            }
-                                            className="-ml-2 p-2 text-white"
-                                        >
-                                            <span className="sr-only">
-                                                Open menu
-                                            </span>
-                                            <BarChart3
-                                                aria-hidden="true"
-                                                className="size-6"
-                                            />
-                                        </button>
+                                {/* Mobile menu and search (lg-) */}
+                                <div className="flex flex-1 items-center lg:hidden">
+                                    <button
+                                        type="button"
+                                        className="-ml-2 p-2 text-white"
+                                    >
+                                        <span className="sr-only">
+                                            Open menu
+                                        </span>
+                                        <BarChart3
+                                            aria-hidden="true"
+                                            className="size-6"
+                                        />
+                                    </button>
 
-                                        {/* Search */}
+                                    {/* Search */}
+                                    <a href="#" className="ml-2 p-2 text-white">
+                                        <span className="sr-only">Search</span>
+                                        <Search
+                                            aria-hidden="true"
+                                            className="size-6"
+                                        />
+                                    </a>
+                                </div>
+
+                                {/* Logo (lg-) */}
+                                <Link href="/" className="lg:hidden">
+                                    <span className="sr-only">
+                                        Your Company
+                                    </span>
+                                    <img
+                                        alt=""
+                                        src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=white"
+                                        className="h-8 w-auto"
+                                    />
+                                </Link>
+
+                                <div className="flex flex-1 items-center justify-end">
+                                    <a
+                                        href="#"
+                                        className="hidden text-sm font-medium text-white lg:block"
+                                    >
+                                        Search
+                                    </a>
+
+                                    <div className="flex items-center lg:ml-8">
+                                        {/* Help */}
                                         <a
                                             href="#"
-                                            className="ml-2 p-2 text-white"
+                                            className="p-2 text-white lg:hidden"
                                         >
                                             <span className="sr-only">
-                                                Search
+                                                Help
                                             </span>
-                                            <Search
+                                            <ShieldQuestion
                                                 aria-hidden="true"
                                                 className="size-6"
                                             />
                                         </a>
-                                    </div>
-
-                                    {/* Logo (lg-) */}
-                                    <a href="#" className="lg:hidden">
-                                        <span className="sr-only">
-                                            Your Company
-                                        </span>
-                                        <img
-                                            alt=""
-                                            src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=white"
-                                            className="h-8 w-auto"
-                                        />
-                                    </a>
-
-                                    <div className="flex flex-1 items-center justify-end">
                                         <a
                                             href="#"
                                             className="hidden text-sm font-medium text-white lg:block"
                                         >
-                                            Search
+                                            Help
                                         </a>
 
-                                        <div className="flex items-center lg:ml-8">
-                                            {/* Help */}
-                                            <a
-                                                href="#"
-                                                className="p-2 text-white lg:hidden"
+                                        {/* Cart */}
+                                        <div className="ml-4 flow-root lg:ml-8">
+                                            <button
+                                                onClick={handleToggleCart}
+                                                className="group -m-2 flex items-center p-2"
                                             >
-                                                <span className="sr-only">
-                                                    Help
-                                                </span>
-                                                <ShieldQuestion
+                                                <ShoppingBagIcon
                                                     aria-hidden="true"
-                                                    className="size-6"
+                                                    className="size-6 shrink-0 text-white"
                                                 />
-                                            </a>
-                                            <a
-                                                href="#"
-                                                className="hidden text-sm font-medium text-white lg:block"
-                                            >
-                                                Help
-                                            </a>
-
-                                            {/* Cart */}
-                                            <div className="ml-4 flow-root lg:ml-8">
-                                                <a
-                                                    href="#"
-                                                    className="group -m-2 flex items-center p-2"
-                                                >
-                                                    <ShoppingBagIcon
-                                                        aria-hidden="true"
-                                                        className="size-6 shrink-0 text-white"
-                                                    />
-                                                    <span className="ml-2 text-sm font-medium text-white">
-                                                        0
-                                                    </span>
-                                                    <span className="sr-only">
-                                                        items in cart, view bag
-                                                    </span>
-                                                </a>
-                                            </div>
+                                                <span className="ml-2 text-sm font-medium text-white">
+                                                    0
+                                                </span>
+                                                <span className="sr-only">
+                                                    items in cart, view bag
+                                                </span>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
